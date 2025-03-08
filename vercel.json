@@ -6,12 +6,20 @@
         "config": {
           "distDir": "frontend/dist"
         }
+      },
+      {
+        "src": "backend/package.json",
+        "use": "@vercel/node"
       }
     ],
     "routes": [
+        {
+        "src": "/api/(.*)",
+        "dest": "backend/index.js"
+        },
       {
         "src": "/(.*)",
-        "dest": "/frontend/$1"
+        "dest": "/frontend/dist/$1"
       }
     ]
   }
