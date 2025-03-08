@@ -4,5 +4,6 @@
   },
   "engines": {
     "node": "22.x"
-  }
+  },
+  "license": "MIT"
 }
