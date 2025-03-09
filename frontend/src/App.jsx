@@ -103,27 +103,32 @@ function App() {
 
   useEffect(() => {
     fetch("/api/pacientes")
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then((data) => setPacientes(data.sort((a, b) => a.nome.localeCompare(b.nome))))
       .catch((error) => console.error("Erro ao carregar pacientes:", error));
   }, []);
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (form.nome.trim() === "") return;
 
     try {
-      const response = await fetch("http://localhost:5000/pacientes", {
+      const response = await fetch("/api/pacientes", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(form),
       });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
       const novoPaciente = await response.json();
       setPacientes([...pacientes, novoPaciente].sort((a, b) => a.nome.localeCompare(b.nome)));
