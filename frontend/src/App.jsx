@@ -94,8 +94,15 @@ function App() {
     return () => window.removeEventListener('showExitWarning', handleExitWarning);
   }, []);
 
+  // useEffect(() => {
+  //   fetch("http://localhost:5000/pacientes")
+  //     .then((response) => response.json())
+  //     .then((data) => setPacientes(data.sort((a, b) => a.nome.localeCompare(b.nome))))
+  //     .catch((error) => console.error("Erro ao carregar pacientes:", error));
+  // }, []);
+
   useEffect(() => {
-    fetch("http://localhost:5000/pacientes")
+    fetch("/api/pacientes")
       .then((response) => response.json())
       .then((data) => setPacientes(data.sort((a, b) => a.nome.localeCompare(b.nome))))
       .catch((error) => console.error("Erro ao carregar pacientes:", error));
