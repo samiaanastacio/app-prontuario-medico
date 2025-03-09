@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && ls -la frontend/dist && sleep 30 && find frontend/dist",
+    "build": "vite build && ls -la dist && sleep 30 && find frontend/dist",
     "lint": "eslint .",
     "preview": "vite preview"
   },
