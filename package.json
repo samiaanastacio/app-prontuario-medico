@@ -1,9 +1,0 @@
-{
-  "dependencies": {
-    "mongodb": "^6.13.1"
-  },
-  "engines": {
-    "node": "22.x"
-  },
-  "license": "MIT"
-}
