@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors"); // Importando CORS
 require("dotenv").config();
 const mongoose = require("mongoose");
+const pacienteRoutes = require('./routes/pacienteRoutes');
+
 
 const app = express();
 
@@ -14,10 +16,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions)); // Agora o CORS está definido corretamente
 app.use(express.json()); // Permite trabalhar com JSON
-
-// Importar Rotas
-const pacienteRoutes = require("./routes/pacienteRoutes");
-app.use("/pacientes", pacienteRoutes);
+app.use("api/pacientes", pacienteRoutes);
 
 // Conectar ao MongoDB Atlas
 mongoose
