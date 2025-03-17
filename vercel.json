@@ -10,13 +10,13 @@
       }
     },
     {
-      "src": "backend/package.json",
+      "src": "backend/server.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
+      "src": "/(.*)",
       "dest": "backend/server.js"
     },
     {
