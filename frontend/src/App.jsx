@@ -94,13 +94,6 @@ function App() {
     return () => window.removeEventListener('showExitWarning', handleExitWarning);
   }, []);
 
-  // useEffect(() => {
-  //   fetch("http://localhost:5000/pacientes")
-  //     .then((response) => response.json())
-  //     .then((data) => setPacientes(data.sort((a, b) => a.nome.localeCompare(b.nome))))
-  //     .catch((error) => console.error("Erro ao carregar pacientes:", error));
-  // }, []);
-
   useEffect(() => {
     fetch("/api/pacientes")
       .then((response) => {
@@ -112,6 +105,14 @@ function App() {
       .then((data) => setPacientes(data.sort((a, b) => a.nome.localeCompare(b.nome))))
       .catch((error) => console.error("Erro ao carregar pacientes:", error));
   }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prevForm) => ({
+      ...prevForm,
+      [name]: value,
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -222,9 +223,9 @@ function ListaPage({ currentPageData, pageCount, handlePageClick }) {
             <p><strong>Convênio:</strong> {paciente.convenio}</p>
             <p><strong>Medicamentos:</strong> {paciente.medicamentos}</p>
             <p><strong>Alergias:</strong> {paciente.alergias}</p>
-            <p><strong>Antecedentes Clínicos:</strong> {paciente.antecedentes_clinicos}</p>
-            <p><strong>Antecedentes Cirúrgicos:</strong> {paciente.antecedentes_cirurgicos}</p>
-            <p><strong>Atendimento:</strong> {paciente.descricao_atendimento}</p>
+            <p><strong>Antecedentes Clínicos:</strong> {paciente.antecedentesClinicos}</p>
+            <p><strong>Antecedentes Cirúrgicos:</strong> {paciente.antecedentesCirurgicos}</p>
+            <p><strong>Atendimento:</strong> {paciente.atendimento}</p>
           </div>
         ))
       ) : (
