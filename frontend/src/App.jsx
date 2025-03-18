@@ -95,7 +95,9 @@ function App() {
   }, []);
 
   useEffect(() => {
-    fetch("https://app-prontuario-medico-backend.vercel.app/api/pacientes")
+    // fetch("https://app-prontuario-medico-backend.vercel.app/api/pacientes")
+    fetch("http://localhost:5000/api/pacientes")
+
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
