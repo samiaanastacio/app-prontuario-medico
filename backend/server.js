@@ -17,7 +17,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions)); // Agora o CORS está definido corretamente
 app.use(express.json()); // Permite trabalhar com JSON
-app.use("api/pacientes", pacienteRoutes);
+app.use("/api/pacientes", pacienteRoutes);
 
 // Conectar ao MongoDB Atlas
 mongoose
