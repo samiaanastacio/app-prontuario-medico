@@ -31,10 +31,9 @@ app.use(express.json()); // Middleware para JSON
 app.use("/api/pacientes", pacienteRoutes);
 
 // Conectar ao MongoDB Atlas
-mongoose
-  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("MongoDB conectado"))
-  .catch((err) => console.error(err));
+mongoose.connect(process.env.MONGO_URI) // Atualize para esta linha
+.then(() => console.log("MongoDB conectado"))
+.catch((err) => console.error(err));
 
 // Rota de teste
 app.get("/", (req, res) => {
