@@ -7,13 +7,23 @@ const pacienteRoutes = require('./routes/pacienteRoutes');
 
 const app = express();
 
+const allowedOrigins = [
+    "http://localhost:5173", // Frontend local
+    "https://app-prontuario-medico.vercel.app", // Frontend em produção
+  ];
+
 // Configuração do CORS
 const corsOptions = {
-    // origin: "http://localhost:5173",
-    origin: "https://app-prontuario-medico.vercel.app", // Permitir apenas o domínio do frontend
-    credentials: true, // Permite envio de cookies/sessões
-    optionSuccessStatus: 200,
-};
+    origin: (origin, callback) => {
+      // Permitir requisições de origens na lista ou sem origem (ex.: Postman)
+      if (allowedOrigins.includes(origin) || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true, // Permitir envio de cookies/sessões
+  };
 
 app.use(cors(corsOptions)); // Agora o CORS está definido corretamente
 app.use(express.json()); // Permite trabalhar com JSON
