@@ -9,7 +9,8 @@ const app = express();
 
 // Configuração do CORS
 const corsOptions = {
-    origin: "http://localhost:5173",
+    // origin: "http://localhost:5173",
+    origin: "*",
     credentials: true, // Permite envio de cookies/sessões
     optionSuccessStatus: 200,
 };
