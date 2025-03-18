@@ -10,7 +10,7 @@ const app = express();
 // Configuração do CORS
 const corsOptions = {
     // origin: "http://localhost:5173",
-    origin: "*",
+    origin: "https://app-prontuario-medico.vercel.app", // Permitir apenas o domínio do frontend
     credentials: true, // Permite envio de cookies/sessões
     optionSuccessStatus: 200,
 };
