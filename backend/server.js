@@ -39,6 +39,7 @@ mongoose
 // Rota de teste
 app.get("/", (req, res) => {
   res.send("Backend rodando!");
+  
 });
 
 // Iniciando o servidor
