@@ -1,5 +1,5 @@
 const express = require("express");
-// const cors = require("cors"); // Importando CORS
+const cors = require("cors"); // Importando CORS
 require("dotenv").config();
 const mongoose = require("mongoose");
 const pacienteRoutes = require("./routes/pacienteRoutes");
@@ -12,19 +12,19 @@ const allowedOrigins = [
 ];
 
 // Configuração do CORS
-// const corsOptions = {
-//   origin: (origin, callback) => {
-//     // Permitir requisições de origens na lista ou sem origem (ex.: Postman)
-//     if (allowedOrigins.includes(origin) || !origin) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error("Not allowed by CORS"));
-//     }
-//   },
-//   credentials: true, // Permitir envio de cookies/sessões
-// };
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Permitir requisições de origens na lista ou sem origem (ex.: Postman)
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true, // Permitir envio de cookies/sessões
+};
 
-// app.use(cors(corsOptions)); // Middleware CORS
+app.use(cors(corsOptions)); // Middleware CORS
 app.use(express.json()); // Middleware para JSON
 
 // Rotas
@@ -39,7 +39,7 @@ mongoose
 // Rota de teste
 app.get("/", (req, res) => {
   res.send("Backend rodando!");
-  
+
 });
 
 // Iniciando o servidor
