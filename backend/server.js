@@ -27,7 +27,18 @@ const corsOptions = {
 
 app.use(cors(corsOptions)); // Agora o CORS está definido corretamente
 app.use(express.json()); // Permite trabalhar com JSON
+
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "http://localhost:5173, https://app-prontuario-medico.vercel.app");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    res.header("Access-Control-Allow-Credentials", "true");
+    next();
+  });
+
 app.use("/api/pacientes", pacienteRoutes);
+
+
 
 // Conectar ao MongoDB Atlas
 mongoose
