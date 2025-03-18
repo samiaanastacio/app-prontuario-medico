@@ -95,7 +95,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    fetch("/api/pacientes")
+    fetch("https://backend-nome-do-projeto.vercel.app/api/pacientes")
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
