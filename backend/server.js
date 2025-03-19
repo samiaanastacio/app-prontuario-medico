@@ -102,8 +102,8 @@ app.use("/api/pacientes", cacheMiddleware, pacienteRoutes);
 // Conectar ao MongoDB Atlas
 mongoose
   .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+    // useNewUrlParser: true,
+    // useUnifiedTopology: true,
     maxPoolSize: 10, // Substituído poolSize por maxPoolSize
   })
   .then(() => console.log("MongoDB conectado"))
