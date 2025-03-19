@@ -214,3 +214,54 @@ body {
   margin: 0;
   padding: 10px 20px;
 }
+
+/* Estilo para o link "Voltar à página inicial" */
+.form-link {
+  display: block;
+  margin-top: 10px;
+  text-decoration: none;
+  color: #007bff;
+  font-size: 14px;
+  text-align: center;
+
+}
+
+.voltar {
+  display: flex;
+  align-items: center;
+}
+
+.form-link:hover {
+  text-decoration: underline;
+}
+/* Estilo para o contêiner da busca */
+.search-input-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Espaçamento entre a caixa de busca e o botão */
+  width: 100%
+}
+
+/* Estilo para o botão "Buscar" */
+.search-button {
+  padding: 10px 20px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 0 5px 5px 0; /* Bordas arredondadas apenas no lado direito */
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.search-button:hover {
+  background-color: #1e40af;
+}
+
+/* Estilo para a caixa de busca */
+.form-input {
+  flex: 1; /* Faz a caixa de busca ocupar todo o espaço restante */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px 0 0 5px; /* Bordas arredondadas apenas no lado esquerdo */
+  font-size: 16px;
+}

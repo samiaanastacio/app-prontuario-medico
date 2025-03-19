@@ -1,71 +1,7 @@
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
-import { Link, Route, BrowserRouter as Router, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Link, Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
-
-function SuccessModal({ isOpen, onClose }) {
-  if (!isOpen) return null;
-
-  return (
-    <div className="modal">
-      <div className="modal-content">
-        <h3>Sucesso!</h3>
-        <p>Paciente cadastrado com sucesso.</p>
-        <button className="form-button" onClick={onClose}>
-          Fechar
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function ExitWarningModal({ isOpen, onClose, onConfirm }) {
-  if (!isOpen) return null;
-
-  return (
-    <div className="modal">
-      <div className="modal-content">
-        <h3>Atenção!</h3>
-        <p>Existem alterações não salvas. Deseja realmente sair?</p>
-        <div className="modal-buttons">
-          <button className="form-button" onClick={onConfirm}>
-            Sim, sair
-          </button>
-          <button className="form-button" onClick={onClose}>
-            Continuar editando
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function NavigationButtonWrapper() {
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const handleNavigate = (e) => {
-    if (location.pathname === "/") {
-      const form = document.querySelector("form");
-      const hasUnsavedChanges = Array.from(form.elements).some(element => element.value !== "");
-      
-      if (hasUnsavedChanges) {
-        e.preventDefault();
-        window.dispatchEvent(new CustomEvent('showExitWarning'));
-      }
-    }
-  };
-
-  return (
-    <Link 
-      to={location.pathname === "/lista" ? "/" : "/lista"} 
-      className="form-button"
-      onClick={handleNavigate}
-    >
-      {location.pathname === "/lista" ? "Voltar" : "Lista de Pacientes"}
-    </Link>
-  );
-}
 
 function App() {
   const [pacientes, setPacientes] = useState([]);
@@ -81,18 +17,10 @@ function App() {
     atendimento: "",
   });
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [showExitModal, setShowExitModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 10;
 
-  useEffect(() => {
-    const handleExitWarning = () => {
-      setShowExitModal(true);
-    };
-
-    window.addEventListener('showExitWarning', handleExitWarning);
-    return () => window.removeEventListener('showExitWarning', handleExitWarning);
-  }, []);
+  const location = useLocation(); // Para verificar a rota atual
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
@@ -115,6 +43,10 @@ function App() {
       .catch((error) => console.error("Erro ao carregar pacientes:", error));
   }, []);
 
+  const handleSearch = () => {
+    console.log("Buscando por:", busca);
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prevForm) => ({
@@ -128,14 +60,14 @@ function App() {
     if (form.nome.trim() === "") return;
 
     try {
-      const response = await fetch("/api/pacientes", {
+      const response = await fetch(`${API_URL}/api/pacientes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(form),
       });
-  
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -171,11 +103,10 @@ function App() {
   };
 
   return (
-    <Router>
-      <div className="app-container">
-        <h1>Prontuário Médico</h1>
-        {/* <NavigationButtonWrapper /> */}
-        <form onSubmit={(e) => { e.preventDefault(); }} className="search-container">
+    <div className="app-container">
+      <h1>Prontuário Médico</h1>
+      <form onSubmit={(e) => e.preventDefault()} className="search-container">
+        <div className="search-input-container">
           <input
             type="text"
             placeholder="Buscar paciente..."
@@ -183,45 +114,47 @@ function App() {
             value={busca}
             onChange={(e) => setBusca(e.target.value)}
           />
-          <Link to="/lista" className="form-button">
+          <button type="button" className="search-button" onClick={handleSearch}>
             Buscar
+          </button>
+        </div>
+        {location.pathname === "/lista" && (
+          <Link to="/" className="form-link">
+            <div className = "voltar">Voltar à página inicial</div>
           </Link>
-        </form>
-        <Routes>
-          <Route 
-            path="/" 
-            element={
-              <CadastroPage 
-                form={form} 
-                handleChange={handleChange} 
-                handleSubmit={handleSubmit}
-                showExitModal={showExitModal}
-                setShowExitModal={setShowExitModal}
-              />
-            } 
-          />
-          <Route 
-            path="/lista" 
-            element={
-              <ListaPage 
-                currentPageData={currentPageData} 
-                pageCount={pageCount} 
-                handlePageClick={handlePageClick}
-              />
-            } 
-          />
-        </Routes>
-        <SuccessModal 
-          isOpen={showSuccessModal} 
-          onClose={() => setShowSuccessModal(false)} 
+        )}
+      </form>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <CadastroPage
+              form={form}
+              handleChange={handleChange}
+              handleSubmit={handleSubmit}
+              setShowSuccessModal={setShowSuccessModal}
+            />
+          }
         />
+        <Route
+          path="/lista"
+          element={
+            <ListaPage
+              currentPageData={currentPageData}
+              pageCount={pageCount}
+              handlePageClick={handlePageClick}
+            />
+          }
+        />
+      </Routes>
+      {location.pathname !== "/lista" && (
         <footer className="footer">
-        <a href="/pacientes" className="footer-link">
-          Lista de Pacientes
-        </a>
-      </footer>
-      </div>
-    </Router>
+          <Link to="/lista" className="footer-link">
+            Lista de Pacientes
+          </Link>
+        </footer>
+      )}
+    </div>
   );
 }
 
@@ -252,111 +185,85 @@ function ListaPage({ currentPageData, pageCount, handlePageClick }) {
         onPageChange={handlePageClick}
         containerClassName={"pagination"}
         previousLinkClassName={"pagination__link"}
-        nextLinkClassName={"pagination__link"}
-        disabledClassName={"pagination__link--disabled"}
+        nextLinkClassName={"pagination__link--disabled"}
         activeClassName={"pagination__link--active"}
       />
     </div>
   );
 }
 
-function CadastroPage({ form, handleChange, handleSubmit, showExitModal, setShowExitModal }) {
-  const navigate = useNavigate();
-  const hasUnsavedChanges = Object.values(form).some(value => value !== "");
-
-  useEffect(() => {
-    const handleBeforeUnload = (e) => {
-      if (hasUnsavedChanges) {
-        e.preventDefault();
-        e.returnValue = "";
-      }
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, [hasUnsavedChanges]);
-
+function CadastroPage({ form, handleChange, handleSubmit, setShowSuccessModal }) {
   return (
-    <>
-      <form onSubmit={handleSubmit} className="form-container">
-        <h2>Cadastrar Paciente</h2>
-        <input
-          type="text"
-          name="nome"
-          placeholder="Nome"
-          className="form-input"
-          value={form.nome}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="number"
-          name="idade"
-          placeholder="Idade"
-          className="form-input"
-          value={form.idade}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="convenio"
-          placeholder="Convênio"
-          className="form-input"
-          value={form.convenio}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="medicamentos"
-          placeholder="Medicamentos em uso"
-          className="form-input"
-          value={form.medicamentos}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="alergias"
-          placeholder="Alergias"
-          className="form-input"
-          value={form.alergias}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="antecedentesClinicos"
-          placeholder="Antecedentes Clínicos"
-          className="form-input"
-          value={form.antecedentesClinicos}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="antecedentesCirurgicos"
-          placeholder="Antecedentes Cirúrgicos"
-          className="form-input"
-          value={form.antecedentesCirurgicos}
-          onChange={handleChange}
-        />
-        <textarea
-          name="atendimento"
-          placeholder="Descrição do atendimento"
-          className="form-input"
-          value={form.atendimento}
-          onChange={handleChange}
-        />
-        <button type="submit" className="form-button">
-          Adicionar Paciente
-        </button>
-      </form>
-      <ExitWarningModal 
-        isOpen={showExitModal}
-        onClose={() => setShowExitModal(false)}
-        onConfirm={() => {
-          setShowExitModal(false);
-          navigate("/lista");
-        }}
+    <form onSubmit={handleSubmit} className="form-container">
+      <h2>Cadastrar Paciente</h2>
+      <input
+        type="text"
+        name="nome"
+        placeholder="Nome"
+        className="form-input"
+        value={form.nome}
+        onChange={handleChange}
+        required
       />
-    </>
+      <input
+        type="number"
+        name="idade"
+        placeholder="Idade"
+        className="form-input"
+        value={form.idade}
+        onChange={handleChange}
+      />
+      <input
+        type="text"
+        name="convenio"
+        placeholder="Convênio"
+        className="form-input"
+        value={form.convenio}
+        onChange={handleChange}
+      />
+      <input
+        type="text"
+        name="medicamentos"
+        placeholder="Medicamentos em uso"
+        className="form-input"
+        value={form.medicamentos}
+        onChange={handleChange}
+      />
+      <input
+        type="text"
+        name="alergias"
+        placeholder="Alergias"
+        className="form-input"
+        value={form.alergias}
+        onChange={handleChange}
+      />
+      <input
+        type="text"
+        name="antecedentesClinicos"
+        placeholder="Antecedentes Clínicos"
+        className="form-input"
+        value={form.antecedentesClinicos}
+        onChange={handleChange}
+      />
+      <input
+        type="text"
+        name="antecedentesCirurgicos"
+        placeholder="Antecedentes Cirúrgicos"
+        className="form-input"
+        value={form.antecedentesCirurgicos}
+        onChange={handleChange}
+      />
+      <textarea
+        name="atendimento"
+        placeholder="Descrição do atendimento"
+        className="form-input"
+        value={form.atendimento}
+        onChange={handleChange}
+      />
+      <button type="submit" className="form-button">
+        Adicionar Paciente
+      </button>
+    </form>
   );
 }
 
