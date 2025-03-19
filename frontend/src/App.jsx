@@ -174,7 +174,7 @@ function App() {
     <Router>
       <div className="app-container">
         <h1>Prontuário Médico</h1>
-        <NavigationButtonWrapper />
+        {/* <NavigationButtonWrapper /> */}
         <form onSubmit={(e) => { e.preventDefault(); }} className="search-container">
           <input
             type="text"
@@ -215,6 +215,11 @@ function App() {
           isOpen={showSuccessModal} 
           onClose={() => setShowSuccessModal(false)} 
         />
+        <footer className="footer">
+        <a href="/pacientes" className="footer-link">
+          Lista de Pacientes
+        </a>
+      </footer>
       </div>
     </Router>
   );
