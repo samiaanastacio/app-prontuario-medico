@@ -22,10 +22,5 @@
       "source": "/(.*)",
       "destination": "frontend/dist/$1"
     }
-  ],
-  "functions": {
-    "backend/server.js": {
-      "maxDuration": 30
-    }
-  }
+  ]
 }
