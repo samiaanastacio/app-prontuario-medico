@@ -66,13 +66,15 @@ const allowedOrigins = [
 // Configuração do CORS
 const corsOptions = {
   origin: (origin, callback) => {
-    if (allowedOrigins.includes(origin) || !origin) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      // Permitir requisições de origens na lista ou sem origem (ex.: Postman)
       callback(null, true);
     } else {
+      console.error(`Origem bloqueada pelo CORS: ${origin}`);
       callback(new Error("Not allowed by CORS"));
     }
   },
-  credentials: true,
+  credentials: true, // Permitir envio de cookies/sessões
 };
 
 app.use(cors(corsOptions)); // Middleware CORS

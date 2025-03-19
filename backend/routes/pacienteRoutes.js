@@ -90,13 +90,16 @@ router.post(
 );
 
 // Listar todos os pacientes (com paginação e filtragem)
-router.get("/", [
+router.get(
+  "/",
+  [
     query("page").isInt({ min: 1 }).optional().withMessage("Página deve ser um número positivo"),
     query("limit").isInt({ min: 1 }).optional().withMessage("Limite deve ser um número positivo"),
-], async (req, res) => {
+  ],
+  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ errors: errors.array() });
     }
 
     const page = parseInt(req.query.page) || 1;
@@ -104,21 +107,24 @@ router.get("/", [
     const skip = (page - 1) * limit;
 
     try {
-        const pacientes = await Paciente.find().skip(skip).limit(limit);
-        const total = await Paciente.countDocuments();
-        res.json({
-            data: {
-                pacientes,
-                page,
-                limit,
-                total,
-            },
-            message: "Pacientes listados com sucesso",
-        });
+      const pacientes = await Paciente.find().skip(skip).limit(limit);
+      const total = await Paciente.countDocuments();
+
+      // Garante que a resposta sempre será um array, mesmo que não haja pacientes
+      res.json({
+        data: {
+          pacientes: pacientes || [], // Retorna um array vazio se não houver pacientes
+          page,
+          limit,
+          total,
+        },
+        message: "Pacientes listados com sucesso",
+      });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+      res.status(500).json({ error: error.message });
     }
-});
+  }
+);
 
 // Buscar um paciente por ID
 router.get("/:id", async (req, res) => {
