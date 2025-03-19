@@ -94,17 +94,24 @@ function App() {
     return () => window.removeEventListener('showExitWarning', handleExitWarning);
   }, []);
 
-  useEffect(() => {
-    fetch("https://app-prontuario-medico-backend.vercel.app/api/pacientes")
-    // fetch("http://localhost:5000/api/pacientes")
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
+  useEffect(() => {
+    fetch(`${API_URL}/api/pacientes`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         return response.json();
       })
-      .then((data) => setPacientes(data.sort((a, b) => a.nome.localeCompare(b.nome))))
+      .then((data) => {
+        if (data.data && Array.isArray(data.data.pacientes)) {
+          const pacientes = data.data.pacientes;
+          setPacientes(pacientes.sort((a, b) => a.nome.localeCompare(b.nome)));
+        } else {
+          console.error("Resposta inesperada da API:", data);
+        }
+      })
       .catch((error) => console.error("Erro ao carregar pacientes:", error));
   }, []);
 
