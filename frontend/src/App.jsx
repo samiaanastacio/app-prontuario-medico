@@ -3,6 +3,7 @@ import ReactPaginate from "react-paginate";
 import { Link, Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 
+
 function App() {
   const [pacientes, setPacientes] = useState([]);
   const [busca, setBusca] = useState("");
